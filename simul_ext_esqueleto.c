@@ -57,11 +57,8 @@ int main(){
 		fflush(stdin);
 		fgets(comando, LONGITUD_COMANDO, stdin);
 		ComprobarComando(comando,orden,argumento1,argumento2);
-		printf("%s", orden);
-		if (strcmp(orden, "salir") == 0){
-        	printf("hola");
-    	}
 		} while (ComprobarComando(comando,orden,argumento1,argumento2) != 0);
+		printf("%s", orden);
 	    if (strcmp(orden, "dir") == 0) {
             Directorio(&directorio,&ext_blq_inodos);
             continue;
@@ -77,7 +74,7 @@ int main(){
          //Si el comando es salir se habrÃ¡n escrito todos los metadatos
          //faltan los datos y cerrar
         if (strcmp(orden, "salir") == 0){
-        	printf("hola");
+        	printf("Adios");
             //GrabarDatos(&memdatos,fent);
             fclose(fent);
             return 0;
@@ -88,17 +85,24 @@ void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps){
 
 }
 int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argumento2){
-	char comandoArray[strlen(strcomando)+1];
+	if (strcomando == NULL)
+		return 1;
+	char comandoArray[strlen(strcomando)];
 	strcpy(comandoArray, strcomando);
+	comandoArray[strlen(strcomando) - 1] = '\0';
 	char *ph = strtok(comandoArray, " ");
-	orden = ph;
-	if (ph != NULL)
+	strcpy(orden, ph);
 	ph = strtok(NULL, " ");
-	argumento1 = ph;
-	if (ph != NULL)
+	if (ph == NULL){
+		return 0;
+	}
+	strcpy(argumento1, ph);
 	ph = strtok(NULL, " ");
-	argumento2 = ph;
-	return 1;
+	if (ph == NULL){
+		return 0;
+	}
+	strcpy(argumento2, ph);
+	return 0;
 }
 void LeeSuperBloque(EXT_SIMPLE_SUPERBLOCK *psup){
 	
