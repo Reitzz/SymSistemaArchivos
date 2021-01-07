@@ -36,6 +36,17 @@ int main(){
     EXT_DATOS datosfich[MAX_BLOQUES_PARTICION];
     int entradadir;
     int grabardatos;
+    
+    EXT_SIMPLE_SUPERBLOCK superBloque = {
+		s_inodes_count = ;          /* inodos de la partición */
+  		s_blocks_count = ;          /* bloques de la partición */
+ 		s_free_blocks_count = ;     /* bloques libres */
+  		s_free_inodes_count = ;     /* inodos libres */
+  		s_first_data_block = ;      /* primer bloque de datos */
+  		s_block_size = ;        /* tamaño del bloque en bytes */
+  		s_relleno[SIZE_BLOQUE-6*sizeof(unsigned int)] = ;
+	}
+	;;
     FILE *fent;
      
      // Lectura del fichero completo de una sola vez
@@ -58,11 +69,25 @@ int main(){
 		fgets(comando, LONGITUD_COMANDO, stdin);
 		ComprobarComando(comando,orden,argumento1,argumento2);
 		} while (ComprobarComando(comando,orden,argumento1,argumento2) != 0);
-		printf("%s", orden);
+		if (strcmp(orden, "info") == 0){
+        	
+        	
+        	
+        	
+        	printf("Bloque %d Bytes\n", SIZE_BLOQUE);
+        	printf("inodos particion = %d\n", MAX_INODOS);
+        	printf("inodos libres = %d\n", superBloque.s_free_inodes_count);
+        	printf("Bloques particion = %d\n", MAX_BLOQUES_PARTICION);
+        	printf("Bloques libres = %d\n", superBloque.s_free_blocks_count);
+        	printf("Primer bloque de datos = %d\n",PRIM_BLOQUE_DATOS);
+            
+            continue;
+        }
 	    if (strcmp(orden, "dir") == 0) {
             Directorio(&directorio,&ext_blq_inodos);
             continue;
         }
+        
          // Escritura de metadatos en comandos rename, remove, copy     
          /*Grabarinodosydirectorio(&directorio,&ext_blq_inodos,fent);
          GrabarByteMaps(&ext_bytemaps,fent);
@@ -79,8 +104,17 @@ int main(){
             fclose(fent);
             return 0;
         }
+        
+        
     }
+    
+    
+    
+    
 }
+
+
+
 void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps){
 
 }
@@ -111,6 +145,22 @@ int BuscaFich(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombre)
 	
 }
 void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
+	//int i;
+	
+	//for(i=0; i<= EXT_ENTRADA_DIR ;i++){
+	
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
 int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo){
