@@ -139,14 +139,15 @@ int BuscaFich(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombre)
 	
 }
 void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
-	//int i;
-	
-	//for(i=0; i<= EXT_ENTRADA_DIR ;i++){
-	
+int i =0;
 
-	
-	
-	
+	for(i=0;i<=2;i++){
+		//while (directorio->dir_nfich[i] =! NULL){
+		
+			printf("%s    tamanio:%i    inodo:%i bloques:%i \n", directorio->dir_nfich, inodos->blq_inodos->size_fichero , directorio->dir_inodo, inodos->blq_inodos );
+			
+		//}
+	}
 	
 }
 int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo){
