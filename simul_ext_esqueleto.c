@@ -43,7 +43,6 @@ int main(){
     fent = fopen("particion.bin","r+b");
     fread(&datosfich, SIZE_BLOQUE, MAX_BLOQUES_PARTICION, fent);    
      
-     
     memcpy(&ext_superblock,(EXT_SIMPLE_SUPERBLOCK *)&datosfich[0], SIZE_BLOQUE);
     memcpy(&directorio,(EXT_ENTRADA_DIR *)&datosfich[3], SIZE_BLOQUE);
     memcpy(&ext_bytemaps,(EXT_BLQ_INODOS *)&datosfich[1], SIZE_BLOQUE);
@@ -56,7 +55,6 @@ int main(){
 		printf (">> ");
 		fflush(stdin);
 		fgets(comando, LONGITUD_COMANDO, stdin);
-		ComprobarComando(comando,orden,argumento1,argumento2);
 		} while (ComprobarComando(comando,orden,argumento1,argumento2) != 0);
 		if (strcmp(orden, "info") == 0){
         	printf("Bloque %i Bytes\n", SIZE_BLOQUE);
@@ -71,7 +69,7 @@ int main(){
         	Printbytemaps(&ext_bytemaps);
     	}
 	    if (strcmp(orden, "dir") == 0) {
-            Directorio(&directorio,&ext_blq_inodos);
+            Directorio(&directorio, &ext_blq_inodos);
             continue;
         }
         
@@ -113,8 +111,9 @@ void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps){
 	printf("\n");
 }
 int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argumento2){
-	if (strcomando == NULL)
+	/*if (strcmp(strcomando, "\0")){
 		return 1;
+	}*/
 	char comandoArray[strlen(strcomando)];
 	strcpy(comandoArray, strcomando);
 	comandoArray[strlen(strcomando) - 1] = '\0';
@@ -139,16 +138,17 @@ int BuscaFich(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombre)
 	
 }
 void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
-int i =0;
-
-	for(i=0;i<=2;i++){
-		//while (directorio->dir_nfich[i] =! NULL){
-		
-			printf("%s    tamanio:%i    inodo:%i bloques:%i \n", directorio->dir_nfich, inodos->blq_inodos->size_fichero , directorio->dir_inodo, inodos->blq_inodos );
-			
-		//}
+int i = 0, j = 0;
+directorio++;
+	for(i=0; i<=2; i++){
+		j = 0;
+		printf("\n%s\ttamaño:%i\tinodo:%i bloques:", directorio->dir_nfich, inodos->blq_inodos[directorio->dir_inodo].size_fichero, directorio->dir_inodo);
+		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] != 65535){
+			printf("%i ", inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j++]);
+		}
+		directorio++;
 	}
-	
+printf("\n");
 }
 int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo){
 	
