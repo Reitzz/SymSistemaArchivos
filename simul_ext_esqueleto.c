@@ -57,7 +57,7 @@ int main(){
 		printf (">> ");
 		fflush(stdin);
 		fgets(comando, LONGITUD_COMANDO, stdin);
-		} while (ComprobarComando(comando, orden, argumento1, argumento2) != 0); 
+		} while (ComprobarComando(comando, orden, argumento1, argumento2) != 0);
 		if (strcmp(orden, "info") == 0)
         	LeeSuperBloque(&ext_superblock);
         else if (strcmp(orden, "bytemaps") == 0)
@@ -125,7 +125,10 @@ int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argu
 
 int BuscaFich(EXT_ENTRADA_DIR *directorio, char *nombre){
 	int i;
-	for(i=0; (directorio->dir_inodo != 0xFFFF || strcmp(directorio->dir_nfich, "" ) == 0); i++){
+	if (strlen(nombre) > LEN_NFICH ){
+		return 1;
+	}
+	for(i=0; (directorio->dir_inodo != NULL_INODO || strcmp(directorio->dir_nfich, "" ) == 0); i++){
 		if (strcmp(nombre, (directorio++)->dir_nfich) == 0){
 			return i;
 		}	
@@ -155,14 +158,14 @@ void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps){
 
 void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
 	int i;
-	while(directorio->dir_inodo != 0xFFFF || strcmp(directorio->dir_nfich, "" ) == 0){
+	while(directorio->dir_inodo != NULL_INODO || strcmp(directorio->dir_nfich, "" ) == 0){
 		if (strcmp(directorio->dir_nfich, "." ) == 0 || strcmp(directorio->dir_nfich, "" ) == 0){
 			directorio++;	
 		}
 		else{
 			i = 0;
 			printf("%s\ttamaño:%i\tinodo:%i bloques:", directorio->dir_nfich, inodos->blq_inodos[directorio->dir_inodo].size_fichero, directorio->dir_inodo);
-			while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != 0xFFFF){
+			while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != NULL_BLOQUE){
 				printf("%i ", inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++]);
 			}
 			printf("\n");
@@ -174,6 +177,10 @@ void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
 
 int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo){
 	int i;
+	if (BuscaFich(directorio, nombrenuevo) == 1){
+		printf("Nombre de fichero demasiado largo, el máximo es %i\n", LEN_NFICH);
+		return 1;
+	}
 	if (BuscaFich(directorio, nombrenuevo) != 0){
 		printf("El nombre de fichero ya existe\n");
 		return 0;
@@ -192,7 +199,7 @@ int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *mem
 	if (BuscaFich(directorio, nombre) != 0){
 		nfichero = BuscaFich(directorio, nombre);
 		directorio += nfichero;
-		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != 0xFFFF; i++){
+		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != NULL_BLOQUE; i++){
 			memdatos = memdatos + inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] - 4;
 			for (j=0; j<= SIZE_BLOQUE && memdatos->dato[j] != 0; j++){
 				printf("%c", memdatos->dato[j]);
@@ -214,13 +221,13 @@ int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 	int i = 0, j;
 	if (BuscaFich(directorio, nombre) != 0){	
 		directorio += BuscaFich(directorio, nombre);
-		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != 0xFFFF);
+		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != NULL_BLOQUE);
 		ext_superblock->s_free_blocks_count += i;									//Superbloque bloques libres
 		ext_superblock->s_free_inodes_count += 1;									//Superbloque inodos
 		strcpy(directorio->dir_nfich , "");											//dir nombre a ""
 		ext_bytemaps->bmap_inodos[directorio->dir_inodo] = 0;						//bytemap inodos a 0
 		inodos->blq_inodos[directorio->dir_inodo].size_fichero = 0;					//size a 0
-		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != 0xFFFF; i++){
+		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != NULL_BLOQUE; i++){
 			ext_bytemaps->bmap_bloques[inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i]] = 0;	// bytemap bloques a 0
 		}
 		for(i = 0; i <=MAX_NUMS_BLOQUE_INODO; i++){
@@ -232,9 +239,9 @@ int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 					}
 				}
 			}
-			inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] = 0xFFFF;	//inodo a bloques todos a ffff
+			inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] = NULL_BLOQUE;	//inodo a bloques todos a ffff
 		}
-		directorio->dir_inodo = 0xFFFF;											//inodo del directorio a ffff
+		directorio->dir_inodo = NULL_INODO;											//inodo del directorio a ffff
 		return 0;
 	}
 	if (strcmp(nombre, "\0") == 0){
@@ -251,13 +258,17 @@ int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, EXT_DATOS *memdatos, char *nombreorigen, char *nombredestino){
 	int i , j, k, nbloques = 0, tamanyorigen, posdirnuevo, posdiroriginal = BuscaFich(directorio, nombreorigen);
 	char bloqueauxiliar[SIZE_BLOQUE];
-	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0 || strcmp(nombredestino, "s") == 0){   // Si encuentras por que coño aparece una s y tengo que filtrarla me harias muy feliz(no es para ti dani)
+	if (BuscaFich(directorio, nombredestino) == 1){
+		printf("Nombre de fichero demasiado largo, el máximo es %i\n", LEN_NFICH);
+		return 1;
+	}
+	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0 /*|| strcmp(nombredestino, "s") == 0*/){   // Si encuentras por que coño aparece una s y tengo que filtrarla me harias muy feliz(no es para ti dani)
 		printf("Nombre de fichero vacío, el comando se escribe como print 'nombre del fichero'\n");
 		return 1;
 	}
 	if (BuscaFich(directorio, nombreorigen) != 0){
 		directorio += BuscaFich(directorio, nombreorigen);
-		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != 0xFFFF)
+		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != NULL_BLOQUE)
 			nbloques++;
 		ext_superblock->s_free_blocks_count -= nbloques;				//Superbloque bloques libres
 		ext_superblock->s_free_inodes_count -= 1;						//superbloque inodos libres
@@ -267,7 +278,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 		tamanyorigen = inodos->blq_inodos[directorio->dir_inodo].size_fichero;   // tamaño origen
 		directorio -= posdiroriginal;
 		
-		for(i = 0;(directorio->dir_inodo != 0xFFFF || strcmp(directorio->dir_nfich, "" ) == 0); i++){
+		for(i = 0;(directorio->dir_inodo != NULL_INODO || strcmp(directorio->dir_nfich, "" ) == 0); i++){
 			if (strcmp(directorio->dir_nfich, "" ) == 0){
 				break;
 			}
@@ -291,7 +302,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 				inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j++] = i;			
 			}
 		}
-		for(j = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] != 0xFFFF; j++){
+		for(j = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] != NULL_BLOQUE; j++){
 			directorio -= posdirnuevo;
 			directorio += posdiroriginal;
 			memdatos = memdatos +  inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] - 4;
