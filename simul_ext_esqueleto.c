@@ -57,7 +57,7 @@ int main(){
 		printf (">> ");
 		fflush(stdin);
 		fgets(comando, LONGITUD_COMANDO, stdin);
-		} while (ComprobarComando(comando,orden,argumento1,argumento2) != 0);
+		} while (ComprobarComando(comando, orden, argumento1, argumento2) != 0); 
 		if (strcmp(orden, "info") == 0)
         	LeeSuperBloque(&ext_superblock);
         else if (strcmp(orden, "bytemaps") == 0)
@@ -211,17 +211,16 @@ int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *mem
 }
 
 int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, char *nombre){
-	int i = 0, j, nbloques = 0;
+	int i = 0, j;
 	if (BuscaFich(directorio, nombre) != 0){	
 		directorio += BuscaFich(directorio, nombre);
-		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != 0xFFFF)
-			nbloques++;
-		ext_superblock->s_free_blocks_count += nbloques;							//Superbloque bloques libres
+		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != 0xFFFF);
+		ext_superblock->s_free_blocks_count += i;									//Superbloque bloques libres
 		ext_superblock->s_free_inodes_count += 1;									//Superbloque inodos
 		strcpy(directorio->dir_nfich , "");											//dir nombre a ""
 		ext_bytemaps->bmap_inodos[directorio->dir_inodo] = 0;						//bytemap inodos a 0
 		inodos->blq_inodos[directorio->dir_inodo].size_fichero = 0;					//size a 0
-		for(i = 0; i<nbloques; i++){
+		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != 0xFFFF; i++){
 			ext_bytemaps->bmap_bloques[inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i]] = 0;	// bytemap bloques a 0
 		}
 		for(i = 0; i <=MAX_NUMS_BLOQUE_INODO; i++){
@@ -252,7 +251,7 @@ int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, EXT_DATOS *memdatos, char *nombreorigen, char *nombredestino){
 	int i , j, k, nbloques = 0, tamanyorigen, posdirnuevo, posdiroriginal = BuscaFich(directorio, nombreorigen);
 	char bloqueauxiliar[SIZE_BLOQUE];
-	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0){
+	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0 || strcmp(nombredestino, "s") == 0){   // Si encuentras por que coño aparece una s y tengo que filtrarla me harias muy feliz(no es para ti dani)
 		printf("Nombre de fichero vacío, el comando se escribe como print 'nombre del fichero'\n");
 		return 1;
 	}
@@ -291,24 +290,24 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 				ext_bytemaps->bmap_bloques[i] = 1;
 				inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j++] = i;			
 			}
-		}	
+		}
 		for(j = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] != 0xFFFF; j++){
 			directorio -= posdirnuevo;
 			directorio += posdiroriginal;
 			memdatos = memdatos +  inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] - 4;
-			for(k = 0; k <= SIZE_BLOQUE && memdatos->dato[k] != 0; k++){
-				bloqueauxiliar[k] = memdatos->dato[k];				
+			for(k = 0; k <= SIZE_BLOQUE - 1 && memdatos->dato[k] != 0; k++){
+				bloqueauxiliar[k] = memdatos->dato[k];
+				 				
 			}
-			nbloques = k - 1;							// Para no crear una variable extra
+			nbloques = k;							// Para no crear una variable extra
 			memdatos = memdatos - inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] + 4;	
 			directorio -= posdiroriginal;
 			directorio += posdirnuevo;
 			memdatos = memdatos + inodos->blq_inodos[directorio->dir_inodo].i_nbloque[j] - 4;
-			for(k = 0; k <= nbloques; k++){
+			for(k = 0; k <= nbloques - 1; k++){
 				memdatos->dato[k] = bloqueauxiliar[k];
-				printf("%c", memdatos->dato[k]); 
 			}
-			if (k<=SIZE_BLOQUE){
+			if (k<SIZE_BLOQUE){
 				memdatos->dato[k] = 0;		//EOF == 0
 				
 			}				 	
