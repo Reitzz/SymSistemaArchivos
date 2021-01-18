@@ -1,15 +1,15 @@
 /* 
 	PROYECTO 2 DE SISTEMAS OPERATIVOS 2INSO A
 	
-	RAÚL CARRASCAL Y DANIEL LEVA
+	RAÃšL CARRASCAL Y DANIEL LEVA
 	
-	SE SIMULARÁ UN SISTEMA DE FICHEROS TIPO LINUX SIMPLIFICADO
+	SE SIMULARÃ UN SISTEMA DE FICHEROS TIPO LINUX SIMPLIFICADO
 	
-	NO SE USARÁ UNA PARTICIÓN DEL DISCO SINO EL FICHERO particion.bin QUE CONTENDRÁ EL SISTEMA COMPLETO
+	NO SE USARÃ UNA PARTICIÃ“N DEL DISCO SINO EL FICHERO particion.bin QUE CONTENDRÃ EL SISTEMA COMPLETO
 */
 
 /*
-Hacemos los includes de las librerías necesarias y
+Hacemos los includes de las librerÃ­as necesarias y
 del archivo con las cabeceras necesarias
 */
 
@@ -19,20 +19,20 @@ del archivo con las cabeceras necesarias
 #include "cabeceras.h"
 
 /*
-Define la longitud maxima que van a poder tener los comandos introducidos, pero el nombre de fichero máximo es 17
+Define la longitud maxima que van a poder tener los comandos introducidos, pero el nombre de fichero mÃ¡ximo es 17
 */
 
 #define LONGITUD_COMANDO 100
 
 /*
-Declaración de las funciones que comprueban comandos y comparan nombres de ficheros 
+DeclaraciÃ³n de las funciones que comprueban comandos y comparan nombres de ficheros 
 */
 
 int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argumento2);
 int BuscaFich(EXT_ENTRADA_DIR *directorio, char *nombre);
 
 /*
-Declaración de las funciones que se van a usar para las acciones del sistema de ficheros
+DeclaraciÃ³n de las funciones que se van a usar para las acciones del sistema de ficheros
 */
 
 void LeeSuperBloque(EXT_SIMPLE_SUPERBLOCK *psup);
@@ -44,7 +44,7 @@ int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, EXT_DATOS *memdatos, char *nombreorigen, char *nombredestino);
 
 /*
-Declaración de las funciones utilizadas para guardar las acciones introducidas por el usuario
+DeclaraciÃ³n de las funciones utilizadas para guardar las acciones introducidas por el usuario
 en el fichero binario particion.bin
 */
 
@@ -56,7 +56,7 @@ void GrabarDatos(EXT_DATOS *memdatos, FILE *fich);
 int main(){
 	
 	/*
-	Inicialización de las variables en las que se guardarán el comando introducida en consola
+	InicializaciÃ³n de las variables en las que se guardarÃ¡n el comando introducida en consola
 	y este mismo separado en 3 partes
 	*/
 	
@@ -69,7 +69,7 @@ int main(){
 	unsigned long int m;
 	
 	/*
-	Inicialización de las variables de los structs definidos en cabeceras.h
+	InicializaciÃ³n de las variables de los structs definidos en cabeceras.h
 	*/
 	
     EXT_SIMPLE_SUPERBLOCK ext_superblock;
@@ -113,8 +113,8 @@ int main(){
     
     /*
 	Hace un bucle infinito de modo que cada vez que se ejecute un comando
-    pida nuevamente una acción tras imprimir, si fuese necesaria,
-    la información pertinente. La consola solo se cierra si se ejecuta el
+    pida nuevamente una acciÃ³n tras imprimir, si fuese necesaria,
+    la informaciÃ³n pertinente. La consola solo se cierra si se ejecuta el
     comando exit.
     */
     
@@ -135,20 +135,20 @@ int main(){
 		
 		/*
 		Se guarda en la variable comando el texto introducido por el usuario
-		con un límite de 100 caracteres 
+		con un lÃ­mite de 100 caracteres 
 		*/
 		
 		fgets(comando, LONGITUD_COMANDO, stdin);
 		
 		/*
 		Se separa el comando introducido en orden, argumento1 y argumento2 y 
-		se revisa que no esté vacío (solo se haya pulsado intro)
+		se revisa que no estÃ© vacÃ­o (solo se haya pulsado intro)
 		*/ 
 		
 		} while (ComprobarComando(comando, orden, argumento1, argumento2) == 1);
 		
 		/*
-		Se elige la función a la que acudir dependiendo de 
+		Se elige la funciÃ³n a la que acudir dependiendo de 
 		la orden introducida por el usuario
 		*/
 		
@@ -162,7 +162,7 @@ int main(){
             if(Renombrar(directorio, &ext_blq_inodos, argumento1, argumento2) != 1);
             
 				/*
-				En caso de que Renombrar devuelva 1, es decir, se haya llevado a cabo con éxito,
+				En caso de que Renombrar devuelva 1, es decir, se haya llevado a cabo con Ã©xito,
 				se graba el sistema de ficheros actualizado en el fichero binario que contiene el sistema.
 				*/
 				
@@ -174,7 +174,7 @@ int main(){
         	if(Borrar(directorio, &ext_blq_inodos, &ext_bytemaps, &ext_superblock, argumento1) != 1);
         	
 	        	/*
-				En caso de que Borrar devuelva 1, es decir, se haya llevado a cabo con éxito,
+				En caso de que Borrar devuelva 1, es decir, se haya llevado a cabo con Ã©xito,
 				se graba el sistema de ficheros actualizado en el fichero binario que contiene el sistema.
 				*/
 				
@@ -184,7 +184,7 @@ int main(){
         	if(Copiar(directorio, &ext_blq_inodos, &ext_bytemaps, &ext_superblock, memdatos,  argumento1, argumento2) != 1);
         	
 	        	/*
-				En caso de que Copiar devuelva 1, es decir, se haya llevado a cabo con éxito,
+				En caso de que Copiar devuelva 1, es decir, se haya llevado a cabo con Ã©xito,
 				se graba el sistema de ficheros actualizado en el fichero binario que contiene el sistema.
 				*/  
 				
@@ -201,7 +201,7 @@ int main(){
         }
         
         /*
-        Si no existiese el comando introducido se le indicaría al usuario
+        Si no existiese el comando introducido se le indicarÃ­a al usuario
         */
         
         else printf("No existe el comando %s\n", orden);
@@ -225,7 +225,7 @@ int main(){
 }
 
 /*
-Función que comprueba que el comando introducido no sea un intro y,
+FunciÃ³n que comprueba que el comando introducido no sea un intro y,
 en caso de no serlo, lo separa en orden, argumento1 y argumento2
 */
 
@@ -240,8 +240,8 @@ int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argu
 	}
 	
 	/*
-	Añade el caracter fin de cadena al final del array en el que se almacena 
-	el comando introducido para que después la función strtok() funcione correctamente
+	AÃ±ade el caracter fin de cadena al final del array en el que se almacena 
+	el comando introducido para que despuÃ©s la funciÃ³n strtok() funcione correctamente
 	*/
 	
 	char comandoArray[strlen(strcomando) + 1];
@@ -268,8 +268,8 @@ int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argu
 }
 
 /*
-Función BuscaFich, sirve para buscar en que numero de directorio se encuentra
-el fichero cuyo nombre coincide con el que se le pasa a la función y para comprobar
+FunciÃ³n BuscaFich, sirve para buscar en que numero de directorio se encuentra
+el fichero cuyo nombre coincide con el que se le pasa a la funciÃ³n y para comprobar
 que la longitud del nombre sea la adecuada
 */
 
@@ -288,7 +288,7 @@ int BuscaFich(EXT_ENTRADA_DIR *directorio, char *nombre){
 	
 	/*
 	Devuelve el valor de i tras repetir el bucle tantas veces como sea necesario
-	hasta que el nombre del fichero pasado a la función sea igual que el nombre 
+	hasta que el nombre del fichero pasado a la funciÃ³n sea igual que el nombre 
 	contenido en el directorio i
 	El bucle finaliza devolviendo 0 en caso de que al fichero no le
 	corresponda ningun inodo o no tenga nombre									
@@ -303,8 +303,8 @@ int BuscaFich(EXT_ENTRADA_DIR *directorio, char *nombre){
 }
 
 /*
-Función para el comando info. Recurre a prints para mostrar en consola
-la información del superbloque obteniéndola desde el struct
+FunciÃ³n para el comando info. Recurre a prints para mostrar en consola
+la informaciÃ³n del superbloque obteniÃ©ndola desde el struct
 EXT_SIMPLE_SUPERBLOCK ubicado en el archivo cabeceras.h
 */
 
@@ -318,7 +318,7 @@ void LeeSuperBloque(EXT_SIMPLE_SUPERBLOCK *psup){
 }
 
 /*
-Función para el comando bytemaps. Imprime el bytemap de 
+FunciÃ³n para el comando bytemaps. Imprime el bytemap de 
 inodos y las primeras 25 posiciones del bytemap de bloques.
 */
 
@@ -344,7 +344,7 @@ void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps){
 }
 
 /*
-Función para el comando dir. 
+FunciÃ³n para el comando dir. 
 */
 
 void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
@@ -360,7 +360,7 @@ void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
 		if (strcmp(directorio->dir_nfich, "." ) == 0 || strcmp(directorio->dir_nfich, "" ) == 0){
 			
 			/*
-			Si es el directorio raíz o uno previamente borrado, lo saltamos
+			Si es el directorio raÃ­z o uno previamente borrado, lo saltamos
 			*/
 			
 			directorio++;	
@@ -372,7 +372,7 @@ void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
 			*/
 			
 			i = 0;
-			printf("%s\ttamaño:%i\tinodo:%i bloques: ", directorio->dir_nfich, inodos->blq_inodos[directorio->dir_inodo].size_fichero, directorio->dir_inodo); 
+			printf("%s\ttamaÃ±o:%i\tinodo:%i bloques: ", directorio->dir_nfich, inodos->blq_inodos[directorio->dir_inodo].size_fichero, directorio->dir_inodo); 
 			while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != NULL_BLOQUE){
 				printf("%i ", inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++]);
 			}
@@ -383,18 +383,18 @@ void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos){
 }
 
 /*
-Función para el comando rename. 
+FunciÃ³n para el comando rename. 
 */
 
 int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo){
 
 	/*
-	Si el nombre que se intenta asignar contiene más de 17 caracteres
+	Si el nombre que se intenta asignar contiene mÃ¡s de 17 caracteres
 	entonces no se renombra el fichero y no se graban los datos
 	*/
 	
 	if (BuscaFich(directorio, nombrenuevo) == 1){
-		printf("Nombre de fichero demasiado largo, el máximo es %i\n", LEN_NFICH);
+		printf("Nombre de fichero demasiado largo, el mÃ¡ximo es %i\n", LEN_NFICH);
 		return 1; 
 	}
 	
@@ -430,7 +430,7 @@ int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombrea
 }
 
 /*
-Función del comando print. Imprime por consola el contenido del fichero elegido
+FunciÃ³n del comando print. Imprime por consola el contenido del fichero elegido
 */
 
 int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *memdatos, char *nombre){
@@ -439,8 +439,8 @@ int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *mem
 		directorio += BuscaFich(directorio, nombre);
 		
 		/*
-		Después de actualizar el directorio, por cada uno de los bloques de datos hasta que sean FFFF,
-		va a mover el puntero de datos a el bloque actual - 4 ya que los primeros 4 están reservados,
+		DespuÃ©s de actualizar el directorio, por cada uno de los bloques de datos hasta que sean FFFF,
+		va a mover el puntero de datos a el bloque actual - 4 ya que los primeros 4 estÃ¡n reservados,
 		imprime el contenido del bloque hasta que acabe o hasta que llegue a 0 (EOF),
 		y resetea el puntero
 		*/
@@ -461,7 +461,7 @@ int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *mem
 	*/
 	
 	if (strcmp(nombre, "\n") == 0){
-		printf("Nombre de fichero vacío, el comando se escribe como print 'nombre del fichero'\n");
+		printf("Nombre de fichero vacÃ­o, el comando se escribe como print 'nombre del fichero'\n");
 		return 1;
 	}
 	
@@ -477,55 +477,62 @@ int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *mem
 }
 
 int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, char *nombre){									//???????????????????
-	int i = 0, j, posicion;
-    //Vamos a busacar al suertudo
-	if (BuscaFich(directorio, nombre) != 0){
-		posicion = BuscaFich(directorio, nombre);
-        //vamos a empezar a liberar cosas (empezando por el superbloque)
-		while( (directorio->dir_inodo != NULL_INODO || strcmp(directorio->dir_nfich, "" ) == 0) && i++ < MAX_INODOS);
-		//Primero el bloques libres
-        ext_superblock->s_free_blocks_count += (i - 1);								
-		//Luego inodos
-        ext_superblock->s_free_inodes_count += 1;									
-		//Ahora el nombre ya no existe
-        strcpy(directorio->dir_nfich , "");											
-		//le cambiamos los bitÂ´maps tambien
-        //los de inodo
-        ext_bytemaps->bmap_inodos[directorio->dir_inodo] = 0;						
-		inodos->blq_inodos[directorio->dir_inodo].size_fichero = 0;	
-        printf("A");				
-		for(i = 0; inodos->blq_inodos[directorio->dir_inodo.i_nbloque[i]] != NULL_BLOQUE; i++){
-            //los de bloque
-			ext_bytemaps->bmap_bloques[inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i]] = 0;	
+	int i = 0, j;
+	if (BuscaFich(directorio, nombre) != 0){	
+		directorio += BuscaFich(directorio, nombre);
+
+		while(inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i++] != NULL_BLOQUE);
+
+		/*
+		El programa va borrando los apartados en orden de menor a mayor importancia, primero los apartados del superbloque,
+		luego el nombre, el tamaÃ±o y los bytemaps y finalmente el contenido del inodo del directorio junto al propio inodo
+		*/
+
+		ext_superblock->s_free_blocks_count += (i - 1);
+		ext_superblock->s_free_inodes_count += 1;
+		strcpy(directorio->dir_nfich , "");
+		ext_bytemaps->bmap_inodos[directorio->dir_inodo] = 0;
+		inodos->blq_inodos[directorio->dir_inodo].size_fichero = 0;
+		for(i = 0; inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] != NULL_BLOQUE; i++){
+			ext_bytemaps->bmap_bloques[inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i]] = 0;
 		}
-        printf("B");
 		for(i = 0; i <=MAX_NUMS_BLOQUE_INODO; i++){
-			if(ext_superblock->s_first_data_block == inodos->blq_inodos[posicion].i_nbloque[i]){
-				printf("C");
-                for(j = 4; j<=MAX_BLOQUES_DATOS; j++){
+			if(ext_superblock->s_first_data_block == inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i]){
+				for(j = 4; j<=MAX_BLOQUES_DATOS; j++){
 					if(ext_bytemaps->bmap_bloques[j] == 1){
-						ext_superblock->s_first_data_block = j;			
+						ext_superblock->s_first_data_block = j;
 						break;
 					}
 				}
 			}
-            //Ponienod la direccion 0xFFFF
-			inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] = NULL_BLOQUE;	
+			inodos->blq_inodos[directorio->dir_inodo].i_nbloque[i] = NULL_BLOQUE;
 		}
-        printf("D");
-        //Lo mismo de antes peor con inodo
-		directorio->dir_inodo = NULL_INODO;										
+		directorio->dir_inodo = NULL_INODO;
 		return 0;
 	}
+
+	/*
+	Si no se especifica el fichero que se quiere borrar da error, avisa al usuario 
+	y no graba los datos
+	*/
+
 	if (strcmp(nombre, "\0") == 0){
-		printf("El fichero al cual quiere usted acudir esta escrito de forma erronea o no existe'\n");
+		printf("Nombre de fichero vacÃ­o, el comando se escribe como remove 'nombre del fichero'\n");
 		return 1;
 	}
+
+	/*
+	Si no se da ninguno de los casos anteriores significa 
+	que se ha introducido mal el argumento1 (el correspondiente
+	al nombre del fichero) y por tanto se avisa del error
+	y no se graban los datos
+	*/
+
 	else{
-		printf("No hay ficheros, te los cargaste todos\n");
+		printf("No se ha encontrado el fichero\n");
 		return 1;
 	}
-	
+
 }
 
 int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *ext_bytemaps, EXT_SIMPLE_SUPERBLOCK *ext_superblock, EXT_DATOS *memdatos, char *nombreorigen, char *nombredestino){
@@ -533,23 +540,23 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 	char bloqueauxiliar[SIZE_BLOQUE];
 	
 	/*
-	Si se intenta copiar asignando un nombre de destino de más de 17 caracteres da error,
+	Si se intenta copiar asignando un nombre de destino de mÃ¡s de 17 caracteres da error,
 	se avisa al usuario y no se graban los datos.
 	*/
 	
 	if (BuscaFich(directorio, nombredestino) == 1){
-		printf("Nombre de fichero demasiado largo, el máximo es %i\n", LEN_NFICH);
+		printf("Nombre de fichero demasiado largo, el mÃ¡ximo es %i\n", LEN_NFICH);
 		return 1;
 	}
 	
 	/*
 	Si no se especifica el nombre del fichero que se quieres copiar o el nombre de destino
 	se avisa del error al usuario y no se graban los datos.
-	En caso de que el nombre sea una s tampoco se admitirá, es un error de strtok() que pasa una s cuando en realidad esta vacío																?????????????????????????
+	En caso de que el nombre sea una s tampoco se admitirÃ¡, es un error de strtok() que pasa una s cuando en realidad esta vacÃ­o																?????????????????????????
 	*/
 	
-	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0 || strcmp(nombredestino, "s") == 0){   // Si encuentras por que coño aparece una s y tengo que filtrarla me harias muy feliz(no es para ti dani)
-		printf("Nombre de fichero vacío, el comando se escribe como print 'nombre del fichero'\n");
+	if (strcmp(nombreorigen, "\0") == 0 || strcmp(nombredestino, "\0") == 0 || strcmp(nombredestino, "s") == 0){   // Si encuentras por que coÃ±o aparece una s y tengo que filtrarla me harias muy feliz(no es para ti dani)
+		printf("Nombre de fichero vacÃ­o, el comando se escribe como print 'nombre del fichero'\n");
 		return 1;
 	}
 	if (BuscaFich(directorio, nombreorigen) != 0){
@@ -559,7 +566,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 		/*
 		Copiar es parecido a borrar, pero en este caso se usan variables auxiliares para no tener que estar
 		moviendose constantemente entre los 2 directorios, pero igualmente empieza por editar el superbloque,
-		luego copia el tamaño original y el nombre del fichero, y finalmente copia los datos
+		luego copia el tamaÃ±o original y el nombre del fichero, y finalmente copia los datos
 		*/
 		
 		ext_superblock->s_free_blocks_count -= (nbloques--) - 1;		//Superbloque bloques libres											?????????????????????????
@@ -567,7 +574,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 		if(ext_bytemaps->bmap_bloques[4] == 0){
 			ext_superblock->s_first_data_block = 4;
 		}
-		tamanyorigen = inodos->blq_inodos[directorio->dir_inodo].size_fichero;   // tamaño origen
+		tamanyorigen = inodos->blq_inodos[directorio->dir_inodo].size_fichero;   // tamaÃ±o origen
 		directorio -= posdiroriginal;
 		
 		for(i = 0;(directorio->dir_inodo != NULL_INODO || strcmp(directorio->dir_nfich, "" ) == 0); i++)
@@ -575,7 +582,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 		posdirnuevo = i;
 		
 		/*
-		Guarda aqui la posición del nuevo directorio, este bucle prioriza los directorios previamente borrados para
+		Guarda aqui la posiciÃ³n del nuevo directorio, este bucle prioriza los directorios previamente borrados para
 		que no queden espacios vacios entre medias
 		*/
 		
@@ -606,7 +613,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 		}
 		
 		/*
-		En el último bucle copia los datos, primero resetea el puntero y lo mueve al directorio original, copia el primer
+		En el Ãºltimo bucle copia los datos, primero resetea el puntero y lo mueve al directorio original, copia el primer
 		bloque de datos a un array auxiliar, resetea de nuevo ambos punteros(directorio y datos), mueve el puntero de directorio
 		a el nuevo directorio y guarda los datos de el array auxiliar en este, esto se repite por cada uno de los bloques que ocupe
 		el fichero.
@@ -628,7 +635,7 @@ int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *e
 			}
 			
 			/*
-			Al final del último bloque, guarda un 0 para indicar que es el EOF
+			Al final del Ãºltimo bloque, guarda un 0 para indicar que es el EOF
 			*/
 			
 			if (j<SIZE_BLOQUE){
